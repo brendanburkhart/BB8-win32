@@ -7,7 +7,6 @@ public:
         double damping, double inertia,
         double resistance, double inductance);
 
-    void bringToSteadyState(double velocity);
     void update(double voltage, double torque, double dt);
 
     // coupling behavior
@@ -29,3 +28,4 @@ private:
 };
 
 Motor CIM();
+Motor Vex775();

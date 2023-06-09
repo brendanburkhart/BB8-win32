@@ -7,11 +7,6 @@ Motor::Motor(double Kt, double Kv,
     resistance(resistance), inductance(inductance),
     angular_velocity(0.0), current(0.0) {}
 
-void Motor::bringToSteadyState(double velocity) {
-    angular_velocity = velocity;
-    current = (damping*velocity)/Kt;
-}
-
 void Motor::update(double voltage, double torque, double dt) {
     double dw = couplingAcceleration(torque);
     double dI = (voltage - Kv*angular_velocity - resistance * current) / inductance;
@@ -34,4 +29,8 @@ double Motor::velocity() const {
 
 Motor CIM() {
     return Motor(1.84e-2, 2.11e-2, 8.91e-2, 7.65e-5, 9.16e-2, 5.90e-5);
+}
+
+Motor Vex775() {
+    return Motor(5.30e-3, 6.37e-4, 1.98e-7, 3e-6, 8.98e-2, 4.00e-5);
 }

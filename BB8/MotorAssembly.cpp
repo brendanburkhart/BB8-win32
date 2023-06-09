@@ -10,11 +10,6 @@ void MotorAssembly::update(double voltage, double output_torque, double dt) {
     gearbox.update(motor.velocity());
 }
 
-void MotorAssembly::bringToSteadyState(double output_velocity) {
-    double motor_velocity = gearbox.inputSpeed(output_velocity);
-    motor.bringToSteadyState(motor_velocity);
-}
-
 double MotorAssembly::velocity() const {
     return gearbox.outputSpeed(motor.velocity());
 }

@@ -16,7 +16,7 @@ Simulation::Simulation(double radius, double sphere_mass, double pendulum_mass, 
       rolling_friction(0.01),
       position(position),
       rotation(Quaternion::Identity()),
-      drive_assembly(CIM(), Gearbox(5.0, 0.0)),
+      drive_assembly(Vex775(), Gearbox(5.0, 0.0)),
       drive_coupling(
       TorqueInterface(
           [=](double t) { return drive_acceleration(t); },
@@ -24,9 +24,9 @@ Simulation::Simulation(double radius, double sphere_mass, double pendulum_mass, 
       TorqueInterface(
               [=](double t) { return drive_assembly.acceleration(t); },
               [=](double t) { return drive_assembly.inertia(t); })),
-      tilt_motor(CIM()),
+      tilt_motor(Vex775()),
       roll(0.0),
-      angular_velocity(2.0),
+      angular_velocity(0.0),
       heading(0.0),
       tilt(0.43 * PI),
       tilt_velocity(0.0),
@@ -37,9 +37,6 @@ Simulation::Simulation(double radius, double sphere_mass, double pendulum_mass, 
     // initial tilt
     Vector3 axis(-1.0, 0.0, 0.0);
     rotation = Quaternion::EulerAngle(tilt, axis).Multiply(rotation);
-
-    drive_assembly.bringToSteadyState(angular_velocity);
-    tilt_motor.bringToSteadyState(tilt_velocity);
 }
 
 Vector3 Simulation::get_position() const {
@@ -93,7 +90,7 @@ void Simulation::fixed_update(double dt) {
     auto [torque_m, drive_shaft_acceleration] = drive_coupling.solve();
     double torque_p = 0.0;
 
-    drive_assembly.update(6.0, torque_m, dt);
+    drive_assembly.update(2.0, torque_m, dt);
     tilt_motor.update(0.0, torque_p, dt);
 
     double m = sphere_mass + pendulum_mass;
