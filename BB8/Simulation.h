@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 #include "Gearbox.h"
 #include "Motor.h"
 #include "MotorAssembly.h"
@@ -14,6 +16,9 @@ public:
 
     Vector3 get_position() const;
     Quaternion get_rotation() const;
+
+    // returns platform angle and tilt pendulum angle
+    std::pair<double, double> platformPosition() const;
 
     double get_heading() const;
 
@@ -48,6 +53,9 @@ private:
 
     double drive_acceleration(double drive_torque) const;
     double drive_d_acceleration(double drive_torque) const;
+
+    double platform_acceleration(double drive_torque) const;
+    double platform_d_acceleration(double drive_torque) const;
 
     void fixed_update(double dt);
 };

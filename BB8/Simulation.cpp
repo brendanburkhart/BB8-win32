@@ -19,8 +19,8 @@ Simulation::Simulation(double radius, double sphere_mass, double pendulum_mass, 
       drive_assembly(Vex775(), Gearbox(5.0, 0.0)),
       drive_coupling(
       TorqueInterface(
-          [=](double t) { return drive_acceleration(t); },
-          [=](double t) { return drive_d_acceleration(t); }),
+          [=](double t) { return drive_acceleration(t) + platform_acceleration(t); },
+          [=](double t) { return drive_d_acceleration(t) + platform_d_acceleration(t); }),
       TorqueInterface(
               [=](double t) { return drive_assembly.acceleration(t); },
               [=](double t) { return drive_assembly.inertia(t); })),
@@ -47,6 +47,10 @@ Quaternion Simulation::get_rotation() const {
     return rotation;
 }
 
+std::pair<double, double> Simulation::platformPosition() const {
+    return { platform_angle, pendulum_angle };
+}
+
 double Simulation::drive_acceleration(double torque) const {
     double numerator = torque - radius * std::cos(tilt) * angular_velocity * tilt_velocity;
     double denominator = (sphere_mass + pendulum_mass) * radius * radius * (2.0 / 3.0 + std::sin(tilt) * std::sin(tilt));
@@ -56,6 +60,19 @@ double Simulation::drive_acceleration(double torque) const {
 
 double Simulation::drive_d_acceleration(double torque) const {
     double denominator = (sphere_mass + pendulum_mass) * radius * radius * (2.0 / 3.0 + std::sin(tilt) * std::sin(tilt));
+
+    return 1.0 / denominator;
+}
+
+double Simulation::platform_acceleration(double torque) const {
+    double numerator = torque - pendulum_length * std::cos(pendulum_angle) * std::sin(platform_angle) * pendulum_mass * g;
+    double denominator = pendulum_mass * pendulum_length * pendulum_length;
+
+    return numerator / denominator;
+}
+
+double Simulation::platform_d_acceleration(double torque) const {
+    double denominator = pendulum_mass * pendulum_length * pendulum_length;
 
     return 1.0 / denominator;
 }
@@ -90,7 +107,7 @@ void Simulation::fixed_update(double dt) {
     auto [torque_m, drive_shaft_acceleration] = drive_coupling.solve();
     double torque_p = 0.0;
 
-    drive_assembly.update(2.0, torque_m, dt);
+    drive_assembly.update(12.0, torque_m, dt);
     tilt_motor.update(0.0, torque_p, dt);
 
     double m = sphere_mass + pendulum_mass;
@@ -102,8 +119,8 @@ void Simulation::fixed_update(double dt) {
     tilt += dt * tilt_velocity;
     tilt_velocity += dt * 3.0 * torque_p / (2 * m * radius * radius);
 
+    platform_velocity += dt * platform_acceleration(torque_m);
     platform_angle += dt * platform_velocity;
-    platform_velocity += dt * (torque_m - pendulum_length * std::cos(pendulum_angle) * std::sin(platform_angle) * pendulum_mass * g) / (pendulum_mass * pendulum_length * pendulum_length);
 
     pendulum_angle += dt * pendulum_velocity;
     pendulum_velocity += dt * (torque_p - pendulum_length * std::cos(platform_angle) * std::sin(pendulum_angle) * pendulum_mass * g) / (pendulum_mass * pendulum_length * pendulum_length);
