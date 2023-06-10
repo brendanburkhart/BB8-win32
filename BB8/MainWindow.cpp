@@ -31,7 +31,7 @@ MainWindow::MainWindow()
       saved_window_state(),
       factory(nullptr),
       render_target(nullptr),
-      simulation(1.0, 9.0, 15, 0.7, 2e-4, Vector3(0.0, 0.0, 1.0)),
+      simulation(1.0, 9.0, 50, 0.7, 2e-4, Vector3(0.0, 0.0, 1.0)),
       imu(&simulation) {};
 
 MainWindow::~MainWindow() {
@@ -235,7 +235,9 @@ void MainWindow::Begin(int fps) {
 
             auto elapsed_time = std::chrono::duration<double>(current_time - last_render);
             double dt = elapsed_time.count();
-            visualization.Update(dt, simulation.get_position(), simulation.get_rotation());
+            visualization.Update(
+                dt, simulation.get_position(), simulation.get_rotation(),
+                simulation.get_platform_rotation(), simulation.get_pendulum_rotation(), simulation.get_heading());
             visualization.Render(render_device);
             Display();
 

@@ -323,5 +323,5 @@ void RenderDevice::PutPixel(int x, int y, Color color) {
     color_buffer[index + 0] = (char)((color.Alpha)*(color.Blue * 255)) + (char)((1.0 - color.Alpha) * (double)color_buffer[index]);
     color_buffer[index + 1] = (char)((color.Alpha)*(color.Green * 255)) + (char)((1.0 - color.Alpha) * (double)color_buffer[index + 1]);
     color_buffer[index + 2] = (char)((color.Alpha)*(color.Red * 255)) + (char)((1.0 - color.Alpha) * (double)color_buffer[index + 2]);
-    color_buffer[index + 3] = (char)((color.Alpha)*(color.Alpha * 255)) + (char)((1.0 - color.Alpha) * (double)color_buffer[index + 3]);
+    color_buffer[index + 3] = (char)std::max(color.Alpha * 255.0, (double)color_buffer[index + 3]);
 }

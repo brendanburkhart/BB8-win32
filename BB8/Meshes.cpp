@@ -60,6 +60,80 @@ Mesh Robot(double radius, int density) {
     return sphere;
 }
 
+Mesh Platform(double width, double thickness) {
+    Mesh platform;
+    Color color(0.8, 0.6, 0.2, 1.0);
+
+    platform.Vertices.push_back(Vector3(-0.5 * width, 0.5 * thickness, -0.5 * width));
+    platform.Vertices.push_back(Vector3(-0.5 * width, -0.5 * thickness, -0.5 * width));
+
+    platform.Vertices.push_back(Vector3(-0.5 * width, 0.5 * thickness, 0.5 * width));
+    platform.Vertices.push_back(Vector3(-0.5 * width, -0.5 * thickness, 0.5 * width));
+
+    platform.Vertices.push_back(Vector3(0.5 * width, 0.5 * thickness, 0.5 * width));
+    platform.Vertices.push_back(Vector3(0.5 * width, -0.5 * thickness, 0.5 * width));
+
+    platform.Vertices.push_back(Vector3(0.5 * width, 0.5 * thickness, -0.5 * width));
+    platform.Vertices.push_back(Vector3(0.5 * width, -0.5 * thickness, -0.5 * width));
+
+    platform.addFace(0, 2, 4, color);
+    platform.addFace(4, 6, 0, color);
+
+    platform.addFace(1, 3, 5, color);
+    platform.addFace(5, 7, 1, color);
+
+    platform.addFace(0, 2, 3, color);
+    platform.addFace(3, 1, 0, color);
+
+    platform.addFace(2, 4, 5, color);
+    platform.addFace(5, 3, 2, color);
+
+    platform.addFace(4, 6, 7, color);
+    platform.addFace(7, 5, 4, color);
+
+    platform.addFace(6, 0, 1, color);
+    platform.addFace(1, 7, 6, color);
+
+    return platform;
+}
+
+Mesh Pendulum(double thickness, double length) {
+    Mesh pendulum;
+    Color color(0.8, 0.6, 0.2, 1.0);
+
+    pendulum.Vertices.push_back(Vector3(-0.5 * thickness, 0.0 * length, -0.5 * thickness));
+    pendulum.Vertices.push_back(Vector3(-0.5 * thickness, -1.0 * length, -0.5 * thickness));
+
+    pendulum.Vertices.push_back(Vector3(-0.5 * thickness, 0.0 * length, 0.5 * thickness));
+    pendulum.Vertices.push_back(Vector3(-0.5 * thickness, -1.0 * length, 0.5 * thickness));
+
+    pendulum.Vertices.push_back(Vector3(0.5 * thickness, 0.0 * length, 0.5 * thickness));
+    pendulum.Vertices.push_back(Vector3(0.5 * thickness, -1.0 * length, 0.5 * thickness));
+
+    pendulum.Vertices.push_back(Vector3(0.5 * thickness, 0.0 * length, -0.5 * thickness));
+    pendulum.Vertices.push_back(Vector3(0.5 * thickness, -1.0 * length, -0.5 * thickness));
+
+    pendulum.addFace(0, 2, 4, color);
+    pendulum.addFace(4, 6, 0, color);
+
+    pendulum.addFace(1, 3, 5, color);
+    pendulum.addFace(5, 7, 1, color);
+
+    pendulum.addFace(0, 2, 3, color);
+    pendulum.addFace(3, 1, 0, color);
+
+    pendulum.addFace(2, 4, 5, color);
+    pendulum.addFace(5, 3, 2, color);
+
+    pendulum.addFace(4, 6, 7, color);
+    pendulum.addFace(7, 5, 4, color);
+
+    pendulum.addFace(6, 0, 1, color);
+    pendulum.addFace(1, 7, 6, color);
+
+    return pendulum;
+}
+
 Mesh Plane(double square_size, int extent) {
     Mesh plane;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <tuple>
 
 #include "framework.h"
 #include "RenderDevice.h"
@@ -12,7 +13,8 @@ public:
     Visualization();
 
     void OnKeyDown(WPARAM wParam, LPARAM lParam);
-    void Update(double elapsed_time, Vector3 sphere_location, Quaternion sphere_rotation);
+    void Update(double elapsed_time, Vector3 sphere_location, Quaternion sphere_rotation,
+        Quaternion platform_rotation, Quaternion pendulum_rotation, double heading);
     void Render(RenderDevice& render_device);
 
 private:
@@ -24,10 +26,17 @@ private:
 
     Vector3 sphere_location;
     Quaternion sphere_rotation;
+    Quaternion platform_rotation;
+    Quaternion pendulum_rotation;
+    double theta;
+    double heading;
 
+    bool relative_camera_orientation;
     bool wireframe_mode;
 
     Mesh sphere;
+    Mesh platform;
+    Mesh pendulum;
     Mesh ground;
 
     void reset_view();

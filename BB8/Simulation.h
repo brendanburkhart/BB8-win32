@@ -16,11 +16,10 @@ public:
 
     Vector3 get_position() const;
     Quaternion get_rotation() const;
-
-    // returns platform angle and tilt pendulum angle
-    std::pair<double, double> platformPosition() const;
-
     double get_heading() const;
+
+    Quaternion get_platform_rotation() const;
+    Quaternion get_pendulum_rotation() const;
 
     void update(double elapsed_time);
 
@@ -34,12 +33,12 @@ private:
     const double rolling_friction;
 
     Vector3 position;
-    Quaternion rotation;
 
     MotorAssembly drive_assembly;
     TorqueCoupling drive_coupling;
 
-    Motor tilt_motor;
+    MotorAssembly tilt_assembly;
+    TorqueCoupling tilt_coupling;
 
     double roll;
     double angular_velocity;
@@ -56,6 +55,12 @@ private:
 
     double platform_acceleration(double drive_torque) const;
     double platform_d_acceleration(double drive_torque) const;
+
+    double tilt_acceleration(double tilt_torque) const;
+    double tilt_d_acceleration(double tilt_torque) const;
+
+    double pendulum_acceleration(double tilt_torque) const;
+    double pendulum_d_acceleration(double tilt_torque) const;
 
     void fixed_update(double dt);
 };
