@@ -31,7 +31,7 @@ MainWindow::MainWindow()
       saved_window_state(),
       factory(nullptr),
       render_target(nullptr),
-      simulation(1.0, 9.0, 50, 0.7, 2e-4, Vector3(0.0, 0.0, 1.0)),
+      simulation(1.0, 9.0, 15.0, 0.7, 2e-4, Vector3(0.0, 0.0, 1.0)),
       imu(&simulation) {};
 
 MainWindow::~MainWindow() {

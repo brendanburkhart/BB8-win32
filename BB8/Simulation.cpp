@@ -16,7 +16,7 @@ Simulation::Simulation(double radius, double sphere_mass, double pendulum_mass, 
       time_step(time_step),
       rolling_friction(0.01),
       position(position),
-      drive_assembly(Vex775(), Gearbox(50.0, 0.0)),
+      drive_assembly(Vex775(), Gearbox(50.0, 1e-2)),
       drive_coupling(
       TorqueInterface(
           [=](double t) { return drive_acceleration(t) + platform_acceleration(t); },
@@ -24,7 +24,7 @@ Simulation::Simulation(double radius, double sphere_mass, double pendulum_mass, 
       TorqueInterface(
               [=](double t) { return drive_assembly.acceleration(t); },
               [=](double t) { return drive_assembly.inertia(t); })),
-      tilt_assembly(Vex775(), Gearbox(30.0, 0.0)),
+      tilt_assembly(Vex775(), Gearbox(30.0, 2.0)),
       tilt_coupling(TorqueInterface(
           [=](double t) { return tilt_acceleration(t) + pendulum_acceleration(t); },
           [=](double t) { return tilt_d_acceleration(t) + pendulum_d_acceleration(t); }),
@@ -160,7 +160,7 @@ void Simulation::fixed_update(double dt) {
     double drive_voltage = 1 * PI - angular_velocity;
     drive_assembly.update(drive_voltage, torque_m, dt);
 
-    double tilt_voltage = 5*(0.35 * PI - tilt) - 10*tilt_velocity;
+    double tilt_voltage = 5 * (0.4 * PI - tilt) - 10 * tilt_velocity;
     tilt_assembly.update(tilt_voltage, torque_p, dt);
 
     angular_velocity += dt * drive_acceleration(torque_m);
